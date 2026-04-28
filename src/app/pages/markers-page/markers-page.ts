@@ -65,6 +65,7 @@ export class MarkersPage implements AfterViewInit {
     if (!this.map()) return;
 
     const map = this.map()!;
+
     const coords = event.lngLat;
     const color = '#xxxxxx'.replace(/x/g, (y) =>
       ((Math.random() * 16) | 0).toString(16)
@@ -83,8 +84,6 @@ export class MarkersPage implements AfterViewInit {
 
     // this.markers.set([newMarker, ...this.markers()])
     this.markers.update((markers) => [newMarker, ...markers]);
-
-    console.log(this.markers());
   }
 
   flyToMarker(lngLat: LngLatLike) {

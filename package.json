@@ -6,7 +6,8 @@
     "start": "ng serve -o",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "set-env": "node ./scripts/set-envs.js"
   },
   "private": true,
   "packageManager": "npm@11.9.0",
@@ -28,6 +29,7 @@
     "@angular/compiler-cli": "^21.2.0",
     "@tailwindcss/postcss": "^4.1.12",
     "daisyui": "5.5.19",
+    "dotenv": "17.4.2",
     "jsdom": "^28.0.0",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",

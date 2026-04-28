@@ -12,46 +12,37 @@ import { environment } from '../../../environments/environment';
 
 mapboxgl.accessToken = environment.mapboxKey;
 
+const MAPBOXSTANDAR: string = 'mapbox://styles/mapbox/standard';
+const MAPBOXSATELLITE: string = 'mapbox://styles/mapbox/standard-satellite';
+
+
 @Component({
   selector: 'app-fullscreen-map-page',
   imports: [DecimalPipe, JsonPipe],
   templateUrl: './fullscreen-map-page.html',
-  styles: `
-    div {
-      width: 100vw;
-      height: calc( 100vh - 64px);
-    }
-
-    #controls {
-      background-color: white;
-      padding: 10px;
-      border-radius: 5px;
-      position: fixed;
-      bottom: 25px;
-      right: 20px;
-      z-index: 9999;
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-      border: 1px solid #e2e8f0;
-      width: 250px;
-    }
-
-  `,
 })
 export class FullscreenMapPage implements AfterViewInit {
   divElement = viewChild<ElementRef>('map');
   map = signal<mapboxgl.Map | null>(null);
+  isToggled = signal(false);
+  style = signal(MAPBOXSTANDAR);
 
-  zoom = signal(14);
+  zoom = signal(10);
   coordinates = signal({
-    lng: -74.5,
-    lat: 40,
+    lng: -90.20,
+    lat: 18.80,
   });
 
   zoomEffect = effect(() => {
     if (!this.map()) return;
 
     this.map()?.setZoom(this.zoom());
-    // this.map()?.zoomTo(this.zoom());
+  });
+
+  styleEffect = effect(() => {
+    if (!this.map()) return;
+
+    this.map()?.setStyle(this.style());
   });
 
   async ngAfterViewInit() {
@@ -64,15 +55,17 @@ export class FullscreenMapPage implements AfterViewInit {
 
     const map = new mapboxgl.Map({
       container: element, // container ID
-      style: 'mapbox://styles/mapbox/streets-v12', // style URL
+      style: this.style(), // style URL
       center: [lng, lat], // starting position [lng, lat]
       zoom: this.zoom(), // starting zoom
+
     });
 
     this.mapListeners(map);
   }
 
   mapListeners(map: mapboxgl.Map) {
+
     map.on('zoomend', (event) => {
       const newZoom = event.target.getZoom();
       this.zoom.set(newZoom);
@@ -92,5 +85,11 @@ export class FullscreenMapPage implements AfterViewInit {
     map.addControl(new mapboxgl.ScaleControl());
 
     this.map.set(map);
+  }
+
+  toggle(value: boolean) {
+    const res = value ? MAPBOXSATELLITE : MAPBOXSTANDAR;
+    this.style.set(res);
+    this.isToggled.set(value);
   }
 }
