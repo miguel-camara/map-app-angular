@@ -9,6 +9,11 @@ import mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
 
 mapboxgl.accessToken = environment.mapboxKey;
+/**
+ * width 100%
+ * height 260
+ *
+ */
 
 @Component({
   selector: 'app-mini-map',
