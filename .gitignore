@@ -6,6 +6,11 @@
 /out-tsc
 /bazel-out
 
+# production
+environment.ts
+environment.development.ts
+.env
+
 # Node
 /node_modules
 npm-debug.log
