@@ -5,10 +5,11 @@ import {
   input,
   viewChild,
 } from '@angular/core';
+import { environment } from '@environments/environment';
 import mapboxgl from 'mapbox-gl';
-import { environment } from '../../../../environments/environment';
 
 mapboxgl.accessToken = environment.mapboxKey;
+
 
 @Component({
   selector: 'app-mini-map',

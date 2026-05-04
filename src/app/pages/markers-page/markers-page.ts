@@ -6,9 +6,9 @@ import {
   viewChild,
 } from '@angular/core';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
-import { environment } from '../../../environments/environment';
 import { v4 as UUIDv4 } from 'uuid';
 import { JsonPipe } from '@angular/common';
+import { environment } from '@environments/environment';
 
 mapboxgl.accessToken = environment.mapboxKey;
 
@@ -40,17 +40,6 @@ export class MarkersPage implements AfterViewInit {
       center: [-122.40985, 37.793085], // starting position [lng, lat]
       zoom: 14,
     });
-
-    // const marker = new mapboxgl.Marker({
-    //   draggable: false,
-    //   color: '#000',
-    // })
-    //   .setLngLat([-122.40985, 37.793085])
-    //   .addTo(map);
-
-    // marker.on('dragend', (event) => {
-    //   console.log(event);
-    // });
 
     this.mapListeners(map);
   }
