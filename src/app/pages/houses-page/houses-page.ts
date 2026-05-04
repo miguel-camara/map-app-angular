@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
+import { MiniMap } from '@maps/components/mini-map/mini-map';
 import { v4 as uuid } from 'uuid';
-import { MiniMap } from '../../maps/components/mini-map/mini-map';
 
 interface HouseProperty {
   id: string;

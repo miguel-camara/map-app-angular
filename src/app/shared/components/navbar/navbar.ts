@@ -1,9 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { routes } from '../../../app.routes';
 import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { routes } from '../../../app.routes';
 
 @Component({
   selector: 'app-navbar',

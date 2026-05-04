@@ -8,13 +8,12 @@ import {
 } from '@angular/core';
 import mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
 import { DecimalPipe, JsonPipe } from '@angular/common';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 mapboxgl.accessToken = environment.mapboxKey;
 
 const MAPBOXSTANDAR: string = 'mapbox://styles/mapbox/standard';
 const MAPBOXSATELLITE: string = 'mapbox://styles/mapbox/standard-satellite';
-
 
 @Component({
   selector: 'app-fullscreen-map-page',
@@ -58,7 +57,6 @@ export class FullscreenMapPage implements AfterViewInit {
       style: this.style(), // style URL
       center: [lng, lat], // starting position [lng, lat]
       zoom: this.zoom(), // starting zoom
-
     });
 
     this.mapListeners(map);
