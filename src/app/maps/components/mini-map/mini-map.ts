@@ -10,7 +10,6 @@ import mapboxgl from 'mapbox-gl';
 
 mapboxgl.accessToken = environment.mapboxKey;
 
-
 @Component({
   selector: 'app-mini-map',
   imports: [],
@@ -20,13 +19,13 @@ mapboxgl.accessToken = environment.mapboxKey;
       width: 100%;
       height: 260px;
     }
-
   `,
 })
 export class MiniMap implements AfterViewInit {
   divElement = viewChild<ElementRef>('map');
   lngLat = input.required<{ lng: number; lat: number }>();
   zoom = input<number>(14);
+  color = input<string>('#111111');
 
   async ngAfterViewInit() {
     if (!this.divElement()?.nativeElement) return;
@@ -36,14 +35,14 @@ export class MiniMap implements AfterViewInit {
     const element = this.divElement()!.nativeElement;
 
     const map = new mapboxgl.Map({
-      container: element, // container ID
-      style: 'mapbox://styles/mapbox/streets-v12', // style URL
+      container: element,
+      style: 'mapbox://styles/mapbox/streets-v12',
       center: this.lngLat(),
       zoom: this.zoom(),
       interactive: false,
       pitch: 30,
     });
 
-    new mapboxgl.Marker().setLngLat(this.lngLat()).addTo(map);
+    new mapboxgl.Marker({ color: this.color() }).setLngLat(this.lngLat()).addTo(map);
   }
 }

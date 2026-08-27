@@ -7,7 +7,7 @@ import {
   viewChild,
 } from '@angular/core';
 import mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
-import { DecimalPipe, JsonPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { environment } from '@environments/environment';
 
 mapboxgl.accessToken = environment.mapboxKey;
@@ -17,7 +17,7 @@ const MAPBOXSATELLITE: string = 'mapbox://styles/mapbox/standard-satellite';
 
 @Component({
   selector: 'app-fullscreen-map-page',
-  imports: [DecimalPipe, JsonPipe],
+  imports: [DecimalPipe],
   templateUrl: './fullscreen-map-page.html',
 })
 export class FullscreenMapPage implements AfterViewInit {
@@ -72,10 +72,6 @@ export class FullscreenMapPage implements AfterViewInit {
     map.on('moveend', () => {
       const center = map.getCenter();
       this.coordinates.set(center);
-    });
-
-    map.on('load', () => {
-      console.log('Map loaded');
     });
 
     map.addControl(new mapboxgl.FullscreenControl());

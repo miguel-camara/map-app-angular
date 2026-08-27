@@ -2,30 +2,32 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  inject,
+  OnDestroy,
   signal,
   viewChild,
 } from '@angular/core';
-import mapboxgl, { LngLatLike } from 'mapbox-gl';
-import { v4 as UUIDv4 } from 'uuid';
-import { JsonPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
+import mapboxgl from 'mapbox-gl';
 import { environment } from '@environments/environment';
+import { MarkersStore } from '@maps/services/markers.store';
+import { SavedMarker } from '@maps/models/saved-marker';
 
 mapboxgl.accessToken = environment.mapboxKey;
 
-interface Marker {
-  id: string;
-  mapboxMarker: mapboxgl.Marker;
-}
-
 @Component({
   selector: 'app-markers-page',
-  imports: [JsonPipe],
+  imports: [DecimalPipe],
   templateUrl: './markers-page.html',
 })
-export class MarkersPage implements AfterViewInit {
+export class MarkersPage implements AfterViewInit, OnDestroy {
+  private readonly store = inject(MarkersStore);
+
   divElement = viewChild<ElementRef>('map');
   map = signal<mapboxgl.Map | null>(null);
-  markers = signal<Marker[]>([]);
+
+  markers = this.store.markers;
+  private readonly mapboxMarkers = new Map<string, mapboxgl.Marker>();
 
   async ngAfterViewInit() {
     if (!this.divElement()?.nativeElement) return;
@@ -33,63 +35,73 @@ export class MarkersPage implements AfterViewInit {
     await new Promise((resolve) => setTimeout(resolve, 80));
 
     const element = this.divElement()!.nativeElement;
+    const saved = this.markers();
+    const center: [number, number] = saved.length
+      ? [saved[0].lng, saved[0].lat]
+      : [-122.40985, 37.793085];
 
     const map = new mapboxgl.Map({
-      container: element, // container ID
-      style: 'mapbox://styles/mapbox/streets-v12', // style URL
-      center: [-122.40985, 37.793085], // starting position [lng, lat]
+      container: element,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center,
       zoom: 14,
     });
 
     this.mapListeners(map);
+    this.hydratePins(map);
   }
 
   mapListeners(map: mapboxgl.Map) {
     map.on('click', (event) => this.mapClick(event));
-
     this.map.set(map);
   }
 
   mapClick(event: mapboxgl.MapMouseEvent) {
-    if (!this.map()) return;
-
-    const map = this.map()!;
+    const map = this.map();
+    if (!map) return;
 
     const coords = event.lngLat;
-    const color = '#xxxxxx'.replace(/x/g, (y) =>
-      ((Math.random() * 16) | 0).toString(16)
+    const color = '#xxxxxx'.replace(/x/g, () =>
+      ((Math.random() * 16) | 0).toString(16),
     );
 
-    const mapboxMarker = new mapboxgl.Marker({
-      color: color,
-    })
-      .setLngLat(coords)
-      .addTo(map);
+    const saved = this.store.add({
+      lng: coords.lng,
+      lat: coords.lat,
+      color,
+    });
 
-    const newMarker: Marker = {
-      id: UUIDv4(),
-      mapboxMarker: mapboxMarker,
-    };
-
-    // this.markers.set([newMarker, ...this.markers()])
-    this.markers.update((markers) => [newMarker, ...markers]);
+    this.placePin(map, saved);
   }
 
-  flyToMarker(lngLat: LngLatLike) {
-    if (!this.map()) return;
-
+  flyToMarker(marker: SavedMarker) {
     this.map()?.flyTo({
-      center: lngLat,
+      center: [marker.lng, marker.lat],
     });
   }
 
-  deleteMarker(marker: Marker) {
-    if (!this.map()) return;
-    const map = this.map()!;
+  deleteMarker(marker: SavedMarker) {
+    this.mapboxMarkers.get(marker.id)?.remove();
+    this.mapboxMarkers.delete(marker.id);
+    this.store.remove(marker.id);
+  }
 
-    marker.mapboxMarker.remove();
+  ngOnDestroy(): void {
+    this.map()?.remove();
+    this.mapboxMarkers.clear();
+  }
 
-    this.markers.set(this.markers().filter((m) => m.id !== marker.id));
-    // this.markers.update(this.markers().filter((m) => m.id !== marker.id));
+  private hydratePins(map: mapboxgl.Map) {
+    for (const saved of this.markers()) {
+      this.placePin(map, saved);
+    }
+  }
+
+  private placePin(map: mapboxgl.Map, saved: SavedMarker) {
+    const mapboxMarker = new mapboxgl.Marker({ color: saved.color })
+      .setLngLat([saved.lng, saved.lat])
+      .addTo(map);
+
+    this.mapboxMarkers.set(saved.id, mapboxMarker);
   }
 }

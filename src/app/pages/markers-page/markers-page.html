@@ -1,33 +1,44 @@
-<div #map class="h-[60vh] sm:h-[calc(100vh-64px)]"></div>
+<div class="relative">
+  <div #map class="h-[58vh] w-full sm:h-[calc(100vh-64px)]"></div>
 
-<section
-  class="h-[40vh] sm:fixed sm:w-65 bg-white sm:rounded sm:top-20 sm:left-10 p-5 overflow-y-scroll"
->
-  <h2 class="text-xl font-bold text-black mb-2">Marcadores</h2>
-  <div class="flex flex-col gap-2">
-    @for (marker of markers(); track marker.id) {
-      <div
-        class="form-control"
-        (click)="flyToMarker(marker.mapboxMarker.getLngLat())"
-        (dblclick)="deleteMarker(marker)"
-      >
-        <label class="label cursor-pointer">
-          <span class="label-text text-black text-xs">
-            {{ marker.mapboxMarker.getLngLat() | json }}
+  <aside
+    class="h-[42vh] overflow-y-auto border-t border-line bg-white p-6 sm:absolute sm:top-6 sm:left-6 sm:h-auto sm:max-h-[calc(100vh-112px)] sm:w-72 sm:rounded-xl sm:border sm:border-line"
+  >
+    <p class="mb-1 text-[0.7rem] font-medium uppercase tracking-[0.08em] text-muted">
+      Colección
+    </p>
+    <h2 class="font-serif text-2xl text-ink">Marcadores</h2>
+    <p class="mt-2 mb-5 text-xs leading-relaxed text-muted">
+      Clic para añadir · doble clic para eliminar
+    </p>
+
+    <div class="flex flex-col gap-2">
+      @for (marker of markers(); track marker.id; let i = $index) {
+        <button
+          type="button"
+          class="flex w-full items-center gap-3 rounded-lg border border-line bg-white px-3 py-2.5 text-left transition-[box-shadow,transform] duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] active:scale-[0.98]"
+          title="Doble clic para eliminar"
+          (click)="flyToMarker(marker)"
+          (dblclick)="deleteMarker(marker)"
+        >
+          <span
+            class="h-3 w-3 shrink-0"
+            style="border-radius: 2px"
+            [style.backgroundColor]="marker.color"
+          ></span>
+          <span class="flex min-w-0 flex-col gap-1">
+            <span class="text-sm font-medium text-ink">Punto {{ i + 1 }}</span>
+            <span class="flex flex-wrap gap-1">
+              <kbd>{{ marker.lat | number: '1.4-4' }}</kbd>
+              <kbd>{{ marker.lng | number: '1.4-4' }}</kbd>
+            </span>
           </span>
-          <input
-            type="radio"
-            name="radio-10"
-            class="radio"
-            [style]="{ backgroundColor: marker.mapboxMarker._color }"
-            checked="checked"
-          />
-        </label>
-      </div>
-    } @empty {
-      <div class="flex justify-center items-center bg-blue-100 rounded py-5">
-        <p class="text-xs text-secondary">No hay marcadores</p>
-      </div>
-    }
-  </div>
-</section>
+        </button>
+      } @empty {
+        <div class="rounded-lg border border-line bg-canvas px-4 py-6 text-center">
+          <p class="text-xs text-muted">No hay marcadores</p>
+        </div>
+      }
+    </div>
+  </aside>
+</div>
