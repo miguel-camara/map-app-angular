@@ -10,7 +10,7 @@
 
     <p class="hidden font-serif text-lg text-muted sm:block">{{ pageTitle() }}</p>
 
-    <nav class="hidden items-center gap-6 md:flex">
+    <nav class="hidden items-center gap-5 lg:gap-6 md:flex">
       @for (route of routes; track route.path) {
         <a
           [routerLink]="route.path"
@@ -31,6 +31,11 @@
             @case ('houses') {
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
                 <path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.91-13.31l-88,48.48A16,16,0,0,0,24,80.48V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM40,80.48,128,32V208H40ZM208,208H144V96h64Z"></path>
+              </svg>
+            }
+            @case ('places') {
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M208,80H184V48a8,8,0,0,0-8-8H80a8,8,0,0,0-8,8V80H48A24,24,0,0,0,24,104v80a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V104A24,24,0,0,0,208,80ZM88,56h80V80H88ZM216,184a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V136H76v8a8,8,0,0,0,16,0v-8h72v8a8,8,0,0,0,16,0v-8h36Z"></path>
               </svg>
             }
           }

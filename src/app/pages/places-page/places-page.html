@@ -1,0 +1,64 @@
+<div class="relative">
+  <div #map class="h-[52vh] w-full sm:h-[calc(100vh-64px)]"></div>
+
+  <aside
+    class="flex h-[48vh] flex-col border-t border-line bg-white p-6 sm:absolute sm:top-6 sm:left-6 sm:h-auto sm:max-h-[calc(100vh-112px)] sm:w-80 sm:rounded-xl sm:border sm:border-line"
+  >
+    <p class="mb-1 text-[0.7rem] font-medium uppercase tracking-[0.08em] text-muted">
+      Directorio
+    </p>
+    <h2 class="font-serif text-2xl text-ink">Establecimientos</h2>
+    <p class="mt-2 mb-4 text-xs leading-relaxed text-muted">
+      Busca una cadena y pulsa un resultado para ir al marcador.
+    </p>
+
+    <form class="mb-4 flex gap-2" (submit)="onSearch($event)">
+      <input
+        type="search"
+        class="min-w-0 flex-1 rounded-md border border-line bg-canvas px-3 py-2 text-sm text-ink outline-none"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+        name="placeQuery"
+        placeholder="Starbucks"
+        autocomplete="off"
+      />
+      <button
+        type="submit"
+        class="rounded-md bg-cta px-3 py-2 text-[0.7rem] font-medium uppercase tracking-[0.06em] text-white transition-transform duration-200 hover:bg-[#333] active:scale-[0.98]"
+      >
+        Buscar
+      </button>
+    </form>
+
+    @if (fromLocal()) {
+      <p class="mb-3 rounded-md bg-pale-yellow px-2 py-1.5 text-[0.7rem] text-pale-yellow-ink">
+        Lista local de San Francisco. Overpass no devolvió resultados.
+      </p>
+    }
+
+    <div class="min-h-0 flex-1 overflow-y-auto">
+      @if (loading()) {
+        <p class="py-6 text-center text-xs text-muted">Buscando en OpenStreetMap…</p>
+      } @else {
+        <div class="flex flex-col gap-2">
+          @for (place of places(); track place.id) {
+            <button
+              type="button"
+              class="w-full rounded-lg border bg-white px-3 py-2.5 text-left transition-[box-shadow,border-color] duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+              [class.border-ink]="selectedId() === place.id"
+              [class.border-line]="selectedId() !== place.id"
+              (click)="selectPlace(place)"
+            >
+              <span class="block text-sm font-medium text-ink">{{ place.name }}</span>
+              <span class="mt-1 block text-xs leading-snug text-muted">{{ place.address }}</span>
+            </button>
+          } @empty {
+            <div class="rounded-lg border border-line bg-canvas px-4 py-6 text-center">
+              <p class="text-xs text-muted">No hay establecimientos para esta búsqueda.</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </aside>
+</div>
