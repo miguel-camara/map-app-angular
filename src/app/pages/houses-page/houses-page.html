@@ -1,36 +1,70 @@
-<section class="container mx-auto">
-  <h2 class="text-3xl font-bold mb-2">Casas</h2>
-  <h3 class="text-xl text-gray-500 mb-2">{{ houses().length }} casas disponibles</h3>
-</section>
+<div class="relative">
+  <div class="ambient-blob" aria-hidden="true"></div>
 
-<section class="container mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
-  @for (house of houses(); track house.id; let i = $index) {
-    <!-- Card -->
-    <div class="card bg-base-100 shadow-xl rounded-t-md overflow-hidden">
-      <app-mini-map [lngLat]="house.lngLat" [zoom]="15" />
+  <section class="relative mx-auto max-w-5xl px-6 pt-24 pb-10">
+    <p class="mb-3 text-[0.7rem] font-medium uppercase tracking-[0.08em] text-muted">
+      Archivo
+    </p>
+    <h1 class="font-serif text-5xl text-ink sm:text-6xl">Propiedades</h1>
+    <p class="mt-4 max-w-xl text-muted">
+      Ubicaciones tomadas de los marcadores guardados en este navegador.
+    </p>
+    <p class="mt-3 font-mono text-xs text-muted">
+      {{ houses().length }}
+      {{ houses().length === 1 ? 'punto' : 'puntos' }}
+    </p>
+  </section>
 
-      <!-- <figure>
-      <img
-        src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-        alt="Shoes"
-      />
-    </figure> -->
-      <div class="card-body">
-        <h2 class="card-title">
-          {{ house.name }}
-          @if (i === 1) {
-            <div class="badge badge-secondary">Nuevo</div>
-          }
-        </h2>
-        <p>{{ house.description }}</p>
-        <div class="card-actions justify-end">
-          @for (tag of house.tags; track $index) {
-            <div class="badge badge-outline badge-accent">{{ tag }}</div>
-          }
-        </div>
+  <section class="relative mx-auto max-w-5xl px-6 pb-24">
+    @if (houses().length === 0) {
+      <div class="rounded-xl border border-line bg-white px-8 py-16 text-center">
+        <h2 class="font-serif text-3xl text-ink">Todavía no hay puntos</h2>
+        <p class="mx-auto mt-3 max-w-md text-muted">
+          Coloca marcadores en el mapa y volverán a aparecer aquí como fichas, con su mini-mapa.
+        </p>
+        <a
+          routerLink="/markers"
+          class="mt-8 inline-block rounded-md bg-cta px-5 py-2.5 text-[0.8rem] font-medium uppercase tracking-[0.06em] text-white no-underline transition-transform duration-200 hover:bg-[#333] active:scale-[0.98]"
+        >
+          Ir a marcadores
+        </a>
       </div>
-    </div>
+    } @else {
+      <div class="houses-grid">
+        @for (house of houses(); track house.id; let i = $index) {
+          <article
+            class="overflow-hidden rounded-xl border border-line bg-white transition-[box-shadow] duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+            [appReveal]="i"
+          >
+            <app-mini-map [lngLat]="house.lngLat" [zoom]="15" [color]="house.color" />
 
-    <!-- Card -->
-  }
-</section>
+            <div class="p-6 sm:p-8">
+              <div class="mb-3 flex items-center gap-2">
+                <span
+                  class="rounded-full bg-pale-green px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-[0.08em] text-pale-green-ink"
+                >
+                  Guardado
+                </span>
+                <span
+                  class="h-2.5 w-2.5"
+                  style="border-radius: 2px"
+                  [style.backgroundColor]="house.color"
+                ></span>
+              </div>
+
+              <h2 class="font-serif text-2xl text-ink">{{ house.name }}</h2>
+              <p class="mt-2 text-sm text-muted">
+                Coordenadas del marcador persistido en este dispositivo.
+              </p>
+
+              <div class="mt-5 flex flex-wrap gap-1.5">
+                <kbd>{{ house.lngLat.lat | number: '1.4-4' }}</kbd>
+                <kbd>{{ house.lngLat.lng | number: '1.4-4' }}</kbd>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</div>

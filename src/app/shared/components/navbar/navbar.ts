@@ -1,5 +1,4 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,39 +6,39 @@ import { routes } from '../../../app.routes';
 
 @Component({
   selector: 'app-navbar',
-  imports: [AsyncPipe, RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.html',
-  styles: ``,
 })
 export class Navbar {
-  router = inject(Router);
+  private readonly router = inject(Router);
+
+  menuOpen = signal(false);
 
   routes = routes
     .map((route) => ({
-      path: route.path,
-      title: `${route.title ?? 'Maps en Angular'}`,
+      path: route.path ?? '',
+      title: `${route.title ?? 'Atlas'}`,
     }))
     .filter((route) => route.path !== '**');
-
-  pageTitle$ = this.router.events.pipe(
-    filter((event) => event instanceof NavigationEnd),
-    // tap((event) => console.log(event)),
-    map((event) => event.url),
-    map(
-      (url) =>
-        routes.find((route) => `/${route.path}` === url)?.title ?? 'Mapas'
-    )
-  );
 
   pageTitle = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
-      // tap((event) => console.log(event)),
-      map((event) => event.url),
-      map(
-        (url) =>
-          routes.find((route) => `/${route.path}` === url)?.title ?? 'Mapas'
-      )
-    )
+      map((event) => this.titleFromUrl(event.urlAfterRedirects)),
+    ),
+    { initialValue: this.titleFromUrl(this.router.url) },
   );
+
+  private titleFromUrl(url: string): string {
+    const path = url.split('?')[0].replace(/^\/#?\/?/, '').replace(/^\//, '');
+    return `${routes.find((route) => route.path === path)?.title ?? 'Atlas'}`;
+  }
+
+  toggleMenu(): void {
+    this.menuOpen.update((open) => !open);
+  }
+
+  closeMenu(): void {
+    this.menuOpen.set(false);
+  }
 }

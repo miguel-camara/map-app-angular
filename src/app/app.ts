@@ -6,5 +6,8 @@ import { Navbar } from './shared/components/navbar/navbar';
   selector: 'app-root',
   imports: [RouterOutlet, Navbar],
   templateUrl: './app.html',
+  host: {
+    class: 'block min-h-screen',
+  },
 })
-export class App { }
+export class App {}
