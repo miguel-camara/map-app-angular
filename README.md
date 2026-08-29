@@ -36,33 +36,35 @@ La interfaz sigue un diseño editorial minimalista: tipografía Newsreader, fond
 
 ## Rutas
 
-| Ruta          | Título           | Descripción                                      |
-| ------------- | ---------------- | ------------------------------------------------ |
-| `/fullscreen` | Mapa             | Mapa interactivo a pantalla completa             |
-| `/markers`    | Marcadores       | Colocar y gestionar marcadores persistentes      |
+| Ruta          | Título           | Descripción                                        |
+| ------------- | ---------------- | -------------------------------------------------- |
+| `/fullscreen` | Mapa             | Mapa interactivo a pantalla completa               |
+| `/markers`    | Marcadores       | Colocar y gestionar marcadores persistentes        |
 | `/houses`     | Propiedades      | Fichas de los marcadores guardados en el navegador |
-| `/places`     | Establecimientos | Búsqueda de locales sobre OpenStreetMap          |
+| `/places`     | Establecimientos | Búsqueda de locales sobre OpenStreetMap            |
 
 ## Capturas
 
-![Mapa a pantalla completa](public/screens/screen-1.png)
+![Mapa a pantalla completa](public/screens/1.webp)
 
-![Marcadores](public/screens/screen-2.png)
+![Marcadores](public/screens/2.webp)
 
-![Propiedades](public/screens/screen-3.png)
+![Propiedades](public/screens/3.webp)
 
-![Establecimientos](public/screens/screen-4.png)
+![Establecimientos](public/screens/4.webp)
+
+![Establecimientos](public/screens/5.webp)
 
 ## Stack tecnológico
 
-| Tecnología                                      | Versión |
-| ----------------------------------------------- | ------- |
-| [Angular](https://angular.dev/)                 | 21      |
+| Tecnología                                            | Versión |
+| ----------------------------------------------------- | ------- |
+| [Angular](https://angular.dev/)                       | 21      |
 | [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) | 3.22    |
-| [Tailwind CSS](https://tailwindcss.com/)        | 4       |
-| [TypeScript](https://www.typescriptlang.org/)   | 5.9     |
-| [Overpass API](https://overpass-api.de/)        | —       |
-| [uuid](https://www.npmjs.com/package/uuid)      | 14      |
+| [Tailwind CSS](https://tailwindcss.com/)              | 4       |
+| [TypeScript](https://www.typescriptlang.org/)         | 5.9     |
+| [Overpass API](https://overpass-api.de/)              | —       |
+| [uuid](https://www.npmjs.com/package/uuid)            | 14      |
 
 **Patrones usados:** componentes standalone, Angular Signals, `HashLocationStrategy`, almacén reactivo con `localStorage`, `HttpClient` con fallback local.
 
@@ -127,19 +129,19 @@ Abre [http://localhost:4200](http://localhost:4200) en el navegador.
 
 ## Variables de entorno
 
-| Variable     | Descripción                          |
-| ------------ | ------------------------------------ |
+| Variable     | Descripción                                                                   |
+| ------------ | ----------------------------------------------------------------------------- |
 | `MAPBOX_KEY` | Token de acceso de [Mapbox](https://console.mapbox.com/account/access-tokens) |
 
 ## Scripts disponibles
 
-| Comando              | Descripción                                    |
-| -------------------- | ---------------------------------------------- |
-| `npm run start`      | Servidor de desarrollo con recarga en caliente |
-| `npm run build`      | Build de producción                            |
-| `npm run watch`      | Build en modo desarrollo con watch             |
-| `npm run set-env`    | Genera `environment.ts` desde `.env`           |
-| `npm test`           | Ejecutar pruebas unitarias                     |
+| Comando           | Descripción                                    |
+| ----------------- | ---------------------------------------------- |
+| `npm run start`   | Servidor de desarrollo con recarga en caliente |
+| `npm run build`   | Build de producción                            |
+| `npm run watch`   | Build en modo desarrollo con watch             |
+| `npm run set-env` | Genera `environment.ts` desde `.env`           |
+| `npm test`        | Ejecutar pruebas unitarias                     |
 
 ## Demo
 
